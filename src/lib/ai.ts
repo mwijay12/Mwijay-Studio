@@ -22,6 +22,7 @@ import {
   getNextElevenLabsKey,
 } from './aiKeys';
 import { getStudioSystemPrompt } from '../data/studioKnowledge';
+import { generatePuterTTS, generatePuterChat } from './puter';
 
 export type GenerateOptions = {
   system?: string;
@@ -34,7 +35,7 @@ export type GenerateOptions = {
 
 export type GenerateResult = {
   text: string;
-  provider: 'groq' | 'cerebras' | 'openrouter' | 'gemini' | 'ollama' | 'none';
+  provider: 'groq' | 'cerebras' | 'openrouter' | 'gemini' | 'ollama' | 'puter' | 'none';
   model?: string;
   ok: boolean;
 };
@@ -48,7 +49,8 @@ export const isAIConfigured = Boolean(
   GROQ_KEYS.length > 0 ||
     CEREBRAS_KEYS.length > 0 ||
     OPENROUTER_KEYS.length > 0 ||
-    GEMINI_KEYS.length > 0
+    GEMINI_KEYS.length > 0 ||
+    typeof window !== 'undefined'
 );
 
 function withTimeout(ms: number) {
@@ -351,6 +353,12 @@ export async function generate(opts: GenerateOptions): Promise<GenerateResult> {
     return { text: geminiText, provider: 'gemini', model: 'gemini-3.6-flash', ok: true };
   }
 
+  // 5. Puter.js Zero-Key Fallback Engine
+  const puterResult = await generatePuterChat(opts.prompt);
+  if (puterResult.ok && puterResult.text) {
+    return { text: puterResult.text, provider: 'puter', model: 'puter/gemini-2.0-flash', ok: true };
+  }
+
   return {
     text: 'Our AI engine is momentarily taking a breath. Please try asking again in a moment, or reach out directly to David on WhatsApp at +255 790 942 616.',
     provider: 'none',
@@ -404,6 +412,12 @@ export async function generateStudioChat(
     return { text: orResult.text, provider: 'openrouter', model: orResult.model, ok: true };
   }
 
+  // Puter fallback
+  const puterResult = await generatePuterChat(lastUserMsg);
+  if (puterResult.ok && puterResult.text) {
+    return { text: puterResult.text, provider: 'puter', model: 'puter/gemini-2.0-flash', ok: true };
+  }
+
   return {
     text: "Hello! I am David's assistant at Mwijay Studio. We build high-performance websites (from $450), custom business systems & dashboards (from $900), and AI workflows (from $300). Feel free to message David directly on WhatsApp at +255 790 942 616 or visit /start to request a proposal!",
     provider: 'none',
@@ -411,7 +425,7 @@ export async function generateStudioChat(
   };
 }
 
-/* ─────────────────────────────────────────── ElevenLabs Voice & Speech Generator */
+/* ─────────────────────────────────────────── Voice & Speech Generator */
 export const DEFAULT_VOICE_ID = 'EXAVITQu4vr4xnSDxMaL'; // Sarah - Mature, Reassuring, Studio Standard (Premade)
 
 export const STUDIO_VOICES = [
@@ -426,7 +440,7 @@ export const STUDIO_VOICES = [
 export async function generateSpeechAudioUrl(
   text: string,
   voiceId: string = DEFAULT_VOICE_ID
-): Promise<{ audioUrl?: string; synthesizedViaBrowser?: boolean; ok: boolean }> {
+): Promise<{ audioUrl?: string; synthesizedViaBrowser?: boolean; provider?: string; ok: boolean }> {
   // Normalize deprecated/restricted library voice IDs to valid premade voice
   const activeVoiceId =
     !voiceId || voiceId === '21m00Tcm4TlvDq8ikWAM' ? DEFAULT_VOICE_ID : voiceId;
@@ -441,8 +455,8 @@ export async function generateSpeechAudioUrl(
 
   if (!cleanSpeechText) return { ok: false };
 
+  // 1. Direct ElevenLabs rotating key pool
   const maxAttempts = Math.min(ELEVENLABS_KEYS.length, 10);
-
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const key = getNextElevenLabsKey();
     if (!key) continue;
@@ -467,14 +481,27 @@ export async function generateSpeechAudioUrl(
       if (res.ok) {
         const blob = await res.blob();
         const audioUrl = URL.createObjectURL(blob);
-        return { audioUrl, ok: true };
+        return { audioUrl, provider: 'elevenlabs', ok: true };
       }
     } catch {
       // Continue to next key
     }
   }
 
-  // Zero-failure fallback: Browser Web Speech API
+  // 2. Zero-Backend Puter.js Multi-Provider TTS (AWS Polly / ElevenLabs / OpenAI)
+  try {
+    const puterRes = await generatePuterTTS(cleanSpeechText, {
+      provider: 'aws-polly',
+      voice: 'Joanna',
+    });
+    if (puterRes.ok && puterRes.audioUrl) {
+      return { audioUrl: puterRes.audioUrl, provider: puterRes.provider || 'puter', ok: true };
+    }
+  } catch {
+    // Continue to browser Web Speech API
+  }
+
+  // 3. Zero-failure fallback: Browser Web Speech API
   if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
     try {
       window.speechSynthesis.cancel();
@@ -482,7 +509,7 @@ export async function generateSpeechAudioUrl(
       utterance.rate = 1.0;
       utterance.pitch = 1.0;
       window.speechSynthesis.speak(utterance);
-      return { synthesizedViaBrowser: true, ok: true };
+      return { synthesizedViaBrowser: true, provider: 'browser-web-speech', ok: true };
     } catch {
       // Speech failed
     }

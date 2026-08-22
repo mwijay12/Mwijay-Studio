@@ -53,3 +53,36 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare global {
+  interface Window {
+    puter?: {
+      ai: {
+        txt2speech: ((
+          text: string,
+          options?: { provider?: string; voice?: string; language?: string; model?: string }
+        ) => Promise<HTMLAudioElement>) & {
+          listVoices?: (options?: {
+            provider?: string;
+          }) => Promise<Array<{ id: string; name: string; language?: { code: string; name: string } }>>;
+        };
+        chat: (
+          prompt: string | Array<{ role: string; content: string }>,
+          options?: { model?: string; stream?: boolean }
+        ) => Promise<{ message: { content: string } } | string>;
+        txt2img: (
+          prompt: string,
+          options?: { model?: string; width?: number; height?: number }
+        ) => Promise<HTMLImageElement>;
+      };
+      auth: {
+        signIn: () => Promise<void>;
+        signOut: () => Promise<void>;
+        isSignedIn: () => boolean;
+        getUser: () => Promise<{ username: string; email?: string } | null>;
+        getMonthlyUsage?: () => Promise<any>;
+        getDetailedAppUsage?: () => Promise<any>;
+      };
+    };
+  }
+}
