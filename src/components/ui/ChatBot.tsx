@@ -364,10 +364,10 @@ export default function ChatBot({
       <motion.button
         onClick={() => setOpen((o) => !o)}
         aria-label="AI Studio Assistant"
-        className="fixed bottom-24 right-6 z-[70] flex h-14 w-14 items-center justify-center rounded-full shadow-2xl shadow-[#2563eb]/40"
+        className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-[70] flex h-[52px] w-[52px] sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-[0_8px_30px_rgba(37,99,235,0.45)] hover:shadow-[0_12px_40px_rgba(37,99,235,0.65)] backdrop-blur-md transition-all active:scale-95 group"
         style={{
-          background: "linear-gradient(135deg, #2563eb, #1e40af)",
-          border: "1px solid rgba(96, 165, 250, 0.4)",
+          background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 55%, #0a1633 100%)",
+          border: "1px solid rgba(96, 165, 250, 0.45)",
         }}
         whileTap={{ scale: 0.92 }}
         animate={{ scale: open ? 0.95 : 1 }}
@@ -379,7 +379,7 @@ export default function ChatBot({
               initial={{ rotate: -90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="text-xl font-light text-white"
+              className="text-lg sm:text-xl font-light text-white"
             >
               ✕
             </motion.span>
@@ -389,11 +389,34 @@ export default function ChatBot({
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="relative flex items-center justify-center"
+              className="relative flex items-center justify-center text-white"
             >
-              <span className="text-2xl">🤖</span>
+              {/* Luxury Bespoke AI Sparkle SVG */}
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-white drop-shadow-[0_2px_8px_rgba(96,165,250,0.6)] transition-transform group-hover:scale-110"
+              >
+                <path
+                  d="M12 2L14.4 7.6L20 10L14.4 12.4L12 18L9.6 12.4L4 10L9.6 7.6L12 2Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M18.5 15L19.4 17.1L21.5 18L19.4 18.9L18.5 21L17.6 18.9L15.5 18L17.6 17.1L18.5 15Z"
+                  fill="#93c5fd"
+                />
+                <path
+                  d="M5.5 15L6.4 17.1L8.5 18L6.4 18.9L5.5 21L4.6 18.9L2.5 18L4.6 17.1L5.5 15Z"
+                  fill="#60a5fa"
+                />
+              </svg>
+
+              {/* Pulsing Live indicator */}
               <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-emerald-400 animate-ping" />
-              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-emerald-400" />
+              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-emerald-400 border border-[#0a1633]" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -414,12 +437,12 @@ export default function ChatBot({
             exit={{ opacity: 0, y: 20, scale: 0.94 }}
             transition={{ type: "spring", stiffness: 380, damping: 28 }}
             data-lenis-prevent
-            className="fixed bottom-40 right-4 z-[70] flex w-[370px] max-w-[calc(100vw-1.5rem)] flex-col overflow-hidden rounded-3xl shadow-[0_24px_80px_rgba(10,22,51,0.65)]"
+            className="fixed bottom-20 right-3 sm:bottom-24 sm:right-6 z-[70] flex w-[calc(100vw-1.5rem)] sm:w-[380px] max-w-[400px] flex-col overflow-hidden rounded-3xl shadow-[0_24px_80px_rgba(10,22,51,0.65)]"
             style={{
-              background: "rgba(10, 22, 51, 0.95)",
+              background: "rgba(10, 22, 51, 0.96)",
               backdropFilter: "blur(24px)",
               border: "1px solid rgba(96, 165, 250, 0.25)",
-              maxHeight: "min(560px, calc(100dvh - 12rem))",
+              maxHeight: "min(560px, calc(100dvh - 6.5rem))",
             }}
           >
             {/* Header */}
@@ -427,12 +450,23 @@ export default function ChatBot({
               className="flex items-center justify-between border-b border-white/10 px-4 py-3.5"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(37,99,235,0.3), rgba(30,64,175,0.2))",
+                  "linear-gradient(135deg, rgba(37,99,235,0.35), rgba(30,64,175,0.2))",
               }}
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#2563eb] to-[#3b82f6] text-sm font-bold text-white shadow-lg shadow-[#2563eb]/40">
-                  ⚡
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#2563eb] to-[#3b82f6] text-white shadow-lg shadow-[#2563eb]/40">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" />
+                  </svg>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -450,7 +484,7 @@ export default function ChatBot({
               <button
                 onClick={handleClearChat}
                 title="Reset conversation"
-                className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white transition"
+                className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white transition cursor-pointer"
               >
                 <svg
                   width="14"
@@ -500,14 +534,47 @@ export default function ChatBot({
                             type="button"
                             onClick={() => handleAudioPlay(msg)}
                             disabled={audioLoadingId === msg.id}
-                            className="inline-flex items-center gap-1.5 rounded-md bg-white/5 px-2 py-0.5 text-[10px] font-medium text-[#93c5fd] hover:bg-white/15 hover:text-white transition disabled:opacity-50"
+                            className="inline-flex items-center gap-1.5 rounded-md bg-white/5 px-2.5 py-1 text-[11px] font-medium text-[#93c5fd] hover:bg-white/15 hover:text-white transition disabled:opacity-50 cursor-pointer"
                           >
                             {audioLoadingId === msg.id ? (
-                              <span className="animate-spin text-xs">⏳</span>
+                              <>
+                                <svg
+                                  className="animate-spin h-3 w-3"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2.5"
+                                >
+                                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.25" />
+                                  <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeLinecap="round" />
+                                </svg>
+                                <span>Synthesizing...</span>
+                              </>
                             ) : playingAudioId === msg.id ? (
-                              <span>⏹ Stop Voice</span>
+                              <>
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                                  <rect x="6" y="6" width="12" height="12" rx="2" />
+                                </svg>
+                                <span>Stop Voice</span>
+                              </>
                             ) : (
-                              <span>🔊 Listen (Voice)</span>
+                              <>
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
+                                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                                </svg>
+                                <span>Listen Voice</span>
+                              </>
                             )}
                           </button>
 

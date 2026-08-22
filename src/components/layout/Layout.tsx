@@ -52,7 +52,6 @@ export default function Layout() {
           </PageTransition>
         </AnimatePresence>
       </main>
-      <AIFloatingIcon />
       <ChatBot onStartProject={() => navigate('/start')} />
       <Footer />
     </div>
