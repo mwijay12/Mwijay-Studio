@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Allura&family=Dancing+Script:wght@500;700&family=Great+Vibes&family=Instrument+Serif:ital@0;1&family=Pinyon+Script&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "./components/ui/glass-effect.css";
+
+:root {
+  /* Mwijay Studio palette — white dominant, blue primary, pink micro-accent */
+  --sand: #f5f8ff;      /* off-white / cool paper */
+  --ink: #0a1633;       /* deep navy ink */
+  --clay: #2563eb;      /* primary blue (kept var name for compatibility) */
+  --blue: #2563eb;
+  --blue-light: #60a5fa;
+  --blue-deep: #0a1633;
+  --pink: #ec4899;      /* used at ~5% as accent only */
+}
+
+@theme {
+  --color-clay: #2563eb;
+  --color-ink: #0a1633;
+  --color-sand: #f5f8ff;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+[data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--sand);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.serif {
+  font-family: 'Instrument Serif', serif;
+}
+
+::selection {
+  background: var(--clay);
+  color: #fff;
+}
+
+.marquee {
+  animation: marquee 70s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  animation: floatUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes spinSlow {
+  to { transform: rotate(360deg); }
+}
+.spin-slow { animation: spinSlow 18s linear infinite; }
+
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+}
+
+/* ---- Loading screen ---- */
+@keyframes loaderBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer-text {
+  background: linear-gradient(90deg, #0a1633 0%, #2563eb 30%, #60a5fa 50%, #2563eb 70%, #0a1633 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 2.4s linear infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.08); }
+}
+.pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
+
+/* Gradient text helper */
+.grad-blue {
+  background: linear-gradient(120deg, #2563eb, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Focus ring for accessibility */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
